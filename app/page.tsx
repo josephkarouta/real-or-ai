@@ -126,13 +126,25 @@ const downloadReport = async () => {
   pdf.setFontSize(12);
   pdf.setTextColor(255, 255, 255);
 
-  pdf.text(`AI Probability: ${result.confidence}%`, 90, 78);
-
   pdf.text(
-    `Real Probability: ${100 - result.confidence}%`,
-    90,
-    87
-  );
+  `AI Probability: ${
+    result.result.includes("AI")
+      ? result.confidence
+      : 100 - result.confidence
+  }%`,
+  90,
+  78
+);
+
+pdf.text(
+  `Real Probability: ${
+    result.result.includes("AI")
+      ? 100 - result.confidence
+      : result.confidence
+  }%`,
+  90,
+  87
+);
 
   pdf.text(
     `File Name: ${result.fileName || "N/A"}`,
@@ -744,7 +756,12 @@ setLoading(false);
       <div>
         <div className="flex justify-between text-sm mb-2">
           <span>AI probability</span>
-          <span>{result.confidence}%</span>
+          <span>
+  {result.result.includes("AI")
+    ? result.confidence
+    : 100 - result.confidence}
+  %
+</span>
         </div>
         <div className="h-3 bg-white/10 rounded-full overflow-hidden">
           <div
@@ -753,27 +770,45 @@ setLoading(false);
     ? "bg-gradient-to-r from-red-500 to-purple-500"
     : "bg-gradient-to-r from-green-400 to-cyan-400"
 }`}
-            style={{ width: `${result.confidence}%` }}
+            style={{
+  width: `${
+    result.result.includes("AI")
+      ? result.confidence
+      : 100 - result.confidence
+  }%`,
+}}
           />
         </div>
       </div>
 
-      <div>
-        <div className="flex justify-between text-sm mb-2">
-          <span>Real probability</span>
-          <span>{100 - result.confidence}%</span>
-        </div>
-        <div className="h-3 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full ${
-  result.result.includes("AI")
-    ? "bg-gradient-to-r from-green-400 to-cyan-400"
-    : "bg-gradient-to-r from-red-500 to-purple-500"
-}`}
-            style={{ width: `${100 - result.confidence}%` }}
-          />
-        </div>
-      </div>
+<div>
+  <div className="flex justify-between text-sm mb-2">
+    <span>Real probability</span>
+    <span>
+      {result.result.includes("AI")
+        ? 100 - result.confidence
+        : result.confidence}
+      %
+    </span>
+  </div>
+
+  <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+    <div
+      className={`h-full rounded-full ${
+        result.result.includes("AI")
+          ? "bg-gradient-to-r from-green-400 to-cyan-400"
+          : "bg-gradient-to-r from-green-400 to-cyan-400"
+      }`}
+      style={{
+        width: `${
+          result.result.includes("AI")
+            ? 100 - result.confidence
+            : result.confidence
+        }%`,
+      }}
+    />
+  </div>
+</div>
     </div>
 
 <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
